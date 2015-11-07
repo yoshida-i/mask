@@ -9087,3 +9087,23 @@ a.button {
   .bar-footer textarea {
     resize: none;
     height: 25px; }
+
+/* fixes an ios bug bear */
+button.ion-android-send {
+  padding-top: 2px; }
+
+.footer-btn-wrap {
+  position: relative;
+  height: 100%;
+  width: 50px;
+  top: 7px; }
+
+.footer-btn {
+  position: absolute !important;
+  bottom: 0; }
+
+.bar.item-input-inset .item-input-wrapper input {
+  width: 100% !important; }
+
+input, textarea, .item-input, .item-input-wrapper {
+  background-color: #f4f4f4 !important; }

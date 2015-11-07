@@ -16,7 +16,20 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('timeLineCtrl', function($scope,$ionicLoading) {
+.controller('timeLineCtrl', function($scope,$ionicLoading,$timeout) {
+
+  var footerBar;
+  var scroller;
+
+  $scope.$on('$ionicView.enter', function() {
+
+      $timeout(function() {
+        footerBar = document.body.querySelector('#TimeLineView .bar-footer');
+        scroller = document.body.querySelector('#TimeLineView .scroll-content');
+        txtInput = angular.element(footerBar.querySelector('textarea'));
+      }, 0);
+      }, 20000);
+
   $scope.datas = [
         { "id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments":[] },
         { "id": "84kakvdi", "body": "理科大内で大・ケイドロ大会開催中！！！参加希望者はコメント下さい！！", "time": "10分", "comments": [{ "id": "84kakvdi", "body": "僕も参加したいです！次参加できるタイミングはいつですか？", "time": "6分" }, { "id": "75hvbfio", "body": "イスタンブール人も参加できる？", "time": "2分" }, { "id": "84kakvdi", "body": "参加したい方はルノアール前30分でよろしくっす！", "time": "1分" }] },
@@ -39,17 +52,14 @@ angular.module('app.controllers', [])
     $ionicLoading.show({
                 template: 'Loading entries...'
             });
-    console.log('reflesh');
     $scope.$broadcast('scroll.refreshComplete');
     $ionicLoading.hide();
   };
 
-      $scope.$on('taResize', function(e, ta) {
-      console.log('taResize');
+  $scope.$on('taResize', function(e, ta) {
       if (!ta) return;
 
       var taHeight = ta[0].offsetHeight;
-      console.log('taHeight: ' + taHeight);
 
       if (!footerBar) return;
 

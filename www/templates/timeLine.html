@@ -1,5 +1,5 @@
-<ion-view title="TimeLine">
-  <ion-content padding="false" class="has-header">
+<ion-view title="TimeLine" id="TimeLineView">
+  <ion-content padding="false" class="has-header hs-footer">
     <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
     </ion-refresher>
     <div class="list card"  ng-repeat="data in datas">
@@ -8,18 +8,14 @@
           id:{{data.id}}
         </p>
           {{data.body}}
-        <p>
-          <a href="/feedback" class="subdued">1 Like</a>
-          <a href="#" class="subdued">5 Comments</a>
-        </p>
       </div>
 
       <div class="item tabs tabs-icon-left">
         <a class="tab-item" href="#">
-          <i class="icon ion-thumbsup"></i> Like
+          <i class="icon ion-thumbsup"></i> 1 Like
         </a>
         <a class="tab-item" href="#">
-          <i class="icon ion-chatbox"></i> Comment
+          <i class="icon ion-chatbox"></i> 5 Comment
         </a>
       </div>
 
