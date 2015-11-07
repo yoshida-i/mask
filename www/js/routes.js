@@ -10,20 +10,10 @@ angular.module('app.routes', [])
 
 
 
-    .state('login', {
-      url: '/login',
-      templateUrl: 'templates/login.html',
-      controller: 'loginCtrl'
-    })
-
-
-
-
-
-    .state('signup', {
-      url: '/signup',
-      templateUrl: 'templates/signup.html',
-      controller: 'signupCtrl'
+    .state('feedback', {
+      url: '/feedback',
+      templateUrl: 'templates/feedback.html',
+      controller: 'feedbackCtrl'
     })
 
 
