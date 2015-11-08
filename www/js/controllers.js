@@ -34,7 +34,17 @@ angular.module('app.controllers', [])
   var currentUser = Parse.User.current();
 
   function getMaskId(){
-    return currentUser.getSessionToken().slice(-7);
+    var hiduke=new Date();
+
+    var year = hiduke.getFullYear();
+    var month = hiduke.getMonth()+1;
+    var day = hiduke.getDate();
+
+    var seed = currentUser.id + year.toString() + month.toString() + day.toString();
+    var shaObj = new jsSHA("SHA-256", "TEXT");
+    shaObj.update(seed);
+    var hash = shaObj.getHash("HEX");
+    return hash.slice(-7);
   }
 
   $scope.sendMessage = function(sendMessageForm) {
@@ -42,8 +52,7 @@ angular.module('app.controllers', [])
       id: getMaskId(),
       text: $scope.input.message
     };
-
-    alert(JSON.stringify(message));
+    alert(getMaskId());
 
   }
 
