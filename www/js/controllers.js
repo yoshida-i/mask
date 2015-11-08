@@ -14,18 +14,38 @@ angular.module('app.controllers', [])
 
 .controller('feedbackCtrl', function($scope) {
   $scope.active = 'happy';
-    $scope.setActive = function(type) {
-        $scope.active = type;
-    };
-    $scope.isActive = function(type) {
-        return type === $scope.active;
-    };
+  $scope.setActive = function(type) {
+      $scope.active = type;
+  };
+  $scope.isActive = function(type) {
+      return type === $scope.active;
+  };
+
+  $scope.save = function(feedback){
+    alert("debug: " + feedback.content + ":" + $scope.active);
+  }
 })
 
 .controller('timeLineCtrl', function($scope,$ionicLoading,$timeout,$ionicPopover) {
 
   var footerBar;
   var scroller;
+
+  var currentUser = Parse.User.current();
+
+  function getMaskId(){
+    return currentUser.getSessionToken().slice(-7);
+  }
+
+  $scope.sendMessage = function(sendMessageForm) {
+    var message = {
+      id: getMaskId(),
+      text: $scope.input.message
+    };
+
+    alert(JSON.stringify(message));
+
+  }
 
   $scope.$on('$ionicView.enter', function() {
 
@@ -34,7 +54,7 @@ angular.module('app.controllers', [])
         scroller = document.body.querySelector('#TimeLineView .scroll-content');
         txtInput = angular.element(footerBar.querySelector('textarea'));
       }, 0);
-      }, 20000);
+  }, 20000);
 
   $scope.datas = [
         { "id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments":[] },
