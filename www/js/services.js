@@ -79,14 +79,11 @@ angular.module('app.services', [])
             // window.localStorage.clear();
             var userid = getUserId();
             var userpassword = getPasword();
-            console.log("userId: " + userid);
+            console.log("UserId: " + userid);
             isUserExist(userid).then(function(result){
-                console.log(result);
                 if (result.length !== 0){
-                    console.log('true');
                     loginToParse(getUserId(), getPasword());
                 }else{
-                    console.log('false');
                     signupToParse(userid, userpassword);
                 }
             });

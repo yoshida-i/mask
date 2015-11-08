@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'monospaced.elastic'])
+angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'monospaced.elastic', 'ngIOS9UIWebViewPatch'])
 
 .run(function($ionicPlatform, authService) {
   $ionicPlatform.ready(function() {
@@ -20,6 +20,6 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
       StatusBar.styleDefault();
     }
     Parse.initialize("u3A4QJJS5GDZyfcsjJ2ZAqopjCRtmrzsGzlM3HrI", "y3ENtTTeFpry3XCHWi89ttmYxxOfMecl1LrQDdn1");
-    authService.login();
+    //authService.login();
   });
 })

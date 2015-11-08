@@ -16,6 +16,9 @@
 
     <link href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet">
 
+    <!-- Needed for Cordova/PhoneGap (will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
     <script src="js/elastic.js"></script>
@@ -25,6 +28,7 @@
     <script src="js/services.js"></script>
     <script src="js/directives.js"></script>
     <script src="js/parse-1.6.7.min.js"></script>
+    <script src="js/angular-ios9-uiwebview-patch.js"></script>
 
   </head>
   <body ng-app="app" animation="slide-left-right-ios7">
