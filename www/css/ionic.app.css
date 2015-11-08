@@ -3500,10 +3500,10 @@ ion-infinite-scroll {
   top: 88px; }
 
 .has-tabs-top {
-  top: 93px; }
+  top: 74px; }
 
 .has-header.has-subheader.has-tabs-top {
-  top: 137px; }
+  top: 118px; }
 
 .has-footer {
   bottom: 44px; }
@@ -3513,14 +3513,14 @@ ion-infinite-scroll {
 
 .has-tabs,
 .bar-footer.has-tabs {
-  bottom: 49px; }
+  bottom: 30px; }
   .has-tabs.pane,
   .bar-footer.has-tabs.pane {
-    bottom: 49px;
+    bottom: 30px;
     height: auto; }
 
 .has-footer.has-tabs {
-  bottom: 93px; }
+  bottom: 74px; }
 
 .pane {
   -webkit-transform: translate3d(0, 0, 0);
@@ -4342,11 +4342,11 @@ a.subdued {
   bottom: 0;
   z-index: 5;
   width: 100%;
-  height: 49px;
+  height: 30px;
   border-style: solid;
   border-top-width: 1px;
   background-size: 0;
-  line-height: 49px; }
+  line-height: 30px; }
   .tabs .tab-item .badge {
     background-color: #444;
     color: #f8f8f8; }
@@ -5109,7 +5109,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
     .tabs-icon-right > .tabs .tab-item .icon:before,
     .tabs-icon-right > .tabs .tab-item .tab-title:before {
       font-size: 24px;
-      line-height: 49px; }
+      line-height: 30px; }
 
 .tabs-icon-left > .tabs .tab-item .icon,
 .tabs-icon-left.tabs .tab-item .icon {
@@ -5306,9 +5306,9 @@ ion-tabs.tabs-color-active-dark .tab-item {
   .platform-ios.platform-cordova .modal-wrapper .modal .has-subheader {
     top: 88px; }
   .platform-ios.platform-cordova .modal-wrapper .modal .has-header.has-tabs-top {
-    top: 93px; }
+    top: 74px; }
   .platform-ios.platform-cordova .modal-wrapper .modal .has-header.has-subheader.has-tabs-top {
-    top: 137px; }
+    top: 118px; }
   .modal-backdrop-bg {
     -webkit-transition: opacity 300ms ease-in-out;
     transition: opacity 300ms ease-in-out;
@@ -8884,10 +8884,10 @@ a.button {
   top: 108px; }
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-header.has-tabs-top {
-  top: 113px; }
+  top: 94px; }
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-header.has-subheader.has-tabs-top {
-  top: 157px; }
+  top: 138px; }
 
 .platform-ios.platform-cordova .popover .bar-header:not(.bar-subheader) {
   height: 44px; }
@@ -9088,6 +9088,21 @@ a.button {
     resize: none;
     height: 25px; }
 
+.nav-bar-title .title-location {
+  border: solid 2px #fff;
+  border-radius: 30px;
+  line-height: 28px;
+  margin: 6px; }
+
+.card-head {
+  font-size: 0.8em;
+  padding: 0px; }
+  .card-head .col {
+    padding: 0px;
+    margin-bottom: 5px; }
+  .card-head div .text-right {
+    text-align: right; }
+
 /* fixes an ios bug bear */
 button.ion-android-send {
   padding-top: 2px; }
@@ -9096,7 +9111,7 @@ button.ion-android-send {
   position: relative;
   height: 100%;
   width: 50px;
-  top: 7px; }
+  top: 0px; }
 
 .footer-btn {
   position: absolute !important;
@@ -9107,3 +9122,21 @@ button.ion-android-send {
 
 input, textarea, .item-input, .item-input-wrapper {
   background-color: #f4f4f4 !important; }
+
+.popover {
+  height: auto !important; }
+
+.popover ion-header-bar {
+  position: relative; }
+
+.popover ion-content {
+  top: 0;
+  position: relative; }
+
+.popover-inner-content {
+  width: 100%;
+  padding: 5px 20px; }
+
+.popover .item {
+  padding-left: 2.5em;
+  border: none; }

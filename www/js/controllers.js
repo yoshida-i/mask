@@ -13,10 +13,16 @@ angular.module('app.controllers', [])
 })
 
 .controller('feedbackCtrl', function($scope) {
-
+  $scope.active = 'happy';
+    $scope.setActive = function(type) {
+        $scope.active = type;
+    };
+    $scope.isActive = function(type) {
+        return type === $scope.active;
+    };
 })
 
-.controller('timeLineCtrl', function($scope,$ionicLoading,$timeout) {
+.controller('timeLineCtrl', function($scope,$ionicLoading,$timeout,$ionicPopover) {
 
   var footerBar;
   var scroller;
@@ -69,4 +75,30 @@ angular.module('app.controllers', [])
       footerBar.style.height = newFooterHeight + 'px';
       scroller.style.bottom = newFooterHeight + 'px';
     });
+
+  $ionicPopover.fromTemplateUrl('my-popover.html', {
+    scope: $scope
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
+
+  $scope.openPopover = function($event) {
+    $scope.popover.show($event);
+  };
+  $scope.closePopover = function() {
+    $scope.popover.hide();
+  };
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.popover.remove();
+  });
+  // Execute action on hide popover
+  $scope.$on('popover.hidden', function() {
+    // Execute action
+  });
+  // Execute action on remove popover
+  $scope.$on('popover.removed', function() {
+    // Execute action
+  });
+
 })

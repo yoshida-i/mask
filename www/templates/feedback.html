@@ -1,8 +1,15 @@
-<ion-view title="Detail">
-    <ion-content padding="true" class="has-header">
-        <div class="list card">
-            <div class="item item-divider">Card</div>
-            <div class="item item-body"></div>
+<ion-view title="フィードバック">
+    <ion-content padding="true" class="has-header" scroll="false">
+        <div class="list">
+            <div class="button-bar">
+                <a class="button icon ion-android-happy" ng-class="{'button-calm': isActive('happy')}" ng-click="setActive('happy')"></a>
+                <a class="button icon ion-android-sad"  ng-class="{'button-calm': isActive('sad')}" ng-click="setActive('sad')"></a>
+            </div>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">内容</span>
+                <textarea name="feedback-content" rows="10" placeholder="内容"></textarea>
+            </label>
         </div>
+        <button class="button button-full button-balanced">送信</button>
     </ion-content>
 </ion-view>
