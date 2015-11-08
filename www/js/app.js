@@ -7,9 +7,8 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'monospaced.elastic'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, authService) {
   $ionicPlatform.ready(function() {
-    console.log(window.cordova.plugins.Keyboard);
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if(window.cordova && window.cordova.plugins.Keyboard) {
@@ -21,5 +20,6 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
       StatusBar.styleDefault();
     }
     Parse.initialize("u3A4QJJS5GDZyfcsjJ2ZAqopjCRtmrzsGzlM3HrI", "y3ENtTTeFpry3XCHWi89ttmYxxOfMecl1LrQDdn1");
+    authService.login();
   });
 })
