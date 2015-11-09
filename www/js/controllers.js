@@ -1,12 +1,5 @@
 angular.module('app.controllers', [])
 
-.controller('loginCtrl', function($scope) {
-
-})
-
-.controller('signupCtrl', function($scope) {
-
-})
 
 .controller('detailCtrl', function($scope) {
 
@@ -26,12 +19,13 @@ angular.module('app.controllers', [])
   }
 })
 
-.controller('timeLineCtrl', function($scope,$ionicLoading,$timeout,$ionicPopover) {
+.controller('timeLineCtrl', function($scope,$ionicLoading,$timeout,$ionicPopover, locationService) {
 
   var footerBar;
   var scroller;
-
   var currentUser = Parse.User.current();
+
+  $scope.location = '読込中';
 
   function getMaskId(){
     var hiduke=new Date();
@@ -47,12 +41,27 @@ angular.module('app.controllers', [])
     return hash.slice(-7);
   }
 
+  function getLocationString(address) {
+    var locality = address.filter(function(item,index){
+      if (item.types.indexOf('locality') >= 0) return true;
+    })[0].short_name;
+
+    var sublocality = address.filter(function(item,index){
+      if (item.types.indexOf('sublocality_level_1') >= 0) return true;
+    })[0].short_name;
+
+    return locality + sublocality + " 付近"
+  }
+
   $scope.sendMessage = function(sendMessageForm) {
     var message = {
       id: getMaskId(),
       text: $scope.input.message
     };
-    alert(getMaskId());
+    locationService.getCurrentLocation()
+    .then(function(results){
+      $scope.location = getLocationString(results[0].address_components);
+    });
 
   }
 

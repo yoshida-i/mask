@@ -89,5 +89,31 @@ angular.module('app.services', [])
             });
         }
     }
+}])
+
+.factory('locationService', ['$q',function($q){
+    function getCurrentLatLng() {
+        var deferred = $q.defer();
+        var posOptions = {timeout: 10000, enableHighAccuracy: false};
+        navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, posOptions);
+        return deferred.promise;
+    }
+
+    function getLocation(position){
+        var deferred = $q.defer();
+        var latlng = new google.maps.LatLng(
+                        position.coords.latitude,
+                        position.coords.longitude);
+        var geocoder = new google.maps.Geocoder;
+        geocoder.geocode({'location': latlng}, deferred.resolve);
+        return deferred.promise;
+    }
+
+    return {
+        getCurrentLocation: function() {
+            return $q.when(getCurrentLatLng())
+            .then(getLocation);
+        }
+    }
 }]);
 
