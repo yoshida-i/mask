@@ -5,6 +5,10 @@ angular.module('app.controllers', [])
 
 })
 
+
+
+
+
 .controller('feedbackCtrl', function($scope) {
   $scope.active = 'happy';
   $scope.setActive = function(type) {
@@ -19,20 +23,40 @@ angular.module('app.controllers', [])
   }
 })
 
+
+
+
+
 .controller('timeLineCtrl', function($scope,$ionicLoading,$timeout,$ionicPopover, locationService) {
+
+  $scope.$on('$ionicView.enter', function() {
+      $timeout(function() {
+        footerBar = document.body.querySelector('#TimeLineView .bar-footer');
+        scroller = document.body.querySelector('#TimeLineView .scroll-content');
+        txtInput = angular.element(footerBar.querySelector('textarea'));
+      }, 0);
+  }, 20000);
 
   var footerBar;
   var scroller;
-  var currentUser = Parse.User.current();
 
+  // 現在地更新
   $scope.location = '読込中';
+  locationService.getCurrentLocation()
+    .then(function(results){
+      $scope.location = getLocationString(results[0].address_components);
+  });
 
+
+  // 書き込み時日付とUserのオブジェクトIDから表示IDを作る
+  // サービスに移す
   function getMaskId(){
-    var hiduke=new Date();
+    var currentUser = Parse.User.current();
+    var d = new Date();
 
-    var year = hiduke.getFullYear();
-    var month = hiduke.getMonth()+1;
-    var day = hiduke.getDate();
+    var year = d.getFullYear();
+    var month = d.getMonth()+1;
+    var day = d.getDate();
 
     var seed = currentUser.id + year.toString() + month.toString() + day.toString();
     var shaObj = new jsSHA("SHA-256", "TEXT");
@@ -41,6 +65,8 @@ angular.module('app.controllers', [])
     return hash.slice(-7);
   }
 
+  // Googleから取得した現在地をいい感じに加工する
+  // サービスに移す
   function getLocationString(address) {
     var locality = address.filter(function(item,index){
       if (item.types.indexOf('locality') >= 0) return true;
@@ -53,26 +79,24 @@ angular.module('app.controllers', [])
     return locality + sublocality + " 付近"
   }
 
+  // 書き込みボタンをおした時に呼ばれる関数
+  // 必要な情報を集めてParseにPutする
   $scope.sendMessage = function(sendMessageForm) {
-    var message = {
-      id: getMaskId(),
-      text: $scope.input.message
-    };
-    locationService.getCurrentLocation()
-    .then(function(results){
-      $scope.location = getLocationString(results[0].address_components);
+    $ionicLoading.show({
+      template: '送信中'
     });
-
+    locationService.getCurrentLatLng()
+    .then(function(position){
+      var point = new Parse.GeoPoint({latitude: position.coords.latitude, longitude: position.coords.longitude});
+      var message = {
+        "id": getMaskId(),
+        "body": $scope.input.message,
+        "location": point
+      };
+      console.log(JSON.stringify(message));
+      $ionicLoading.hide();
+    });
   }
-
-  $scope.$on('$ionicView.enter', function() {
-
-      $timeout(function() {
-        footerBar = document.body.querySelector('#TimeLineView .bar-footer');
-        scroller = document.body.querySelector('#TimeLineView .scroll-content');
-        txtInput = angular.element(footerBar.querySelector('textarea'));
-      }, 0);
-  }, 20000);
 
   $scope.datas = [
         { "id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments":[] },
@@ -92,6 +116,8 @@ angular.module('app.controllers', [])
         { "id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments":[] },
         { "id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments":[] }
     ];
+
+  // 画面を引っ張った時の更新の関数
   $scope.doRefresh = function() {
     $ionicLoading.show({
                 template: 'Loading entries...'
@@ -99,6 +125,10 @@ angular.module('app.controllers', [])
     $scope.$broadcast('scroll.refreshComplete');
     $ionicLoading.hide();
   };
+
+  // ===========================
+  // 下部テキストエリアの
+  // ===========================
 
   $scope.$on('taResize', function(e, ta) {
       if (!ta) return;
@@ -114,12 +144,14 @@ angular.module('app.controllers', [])
       scroller.style.bottom = newFooterHeight + 'px';
     });
 
+  // ===========================
+  // popover関係
+  // ===========================
   $ionicPopover.fromTemplateUrl('my-popover.html', {
     scope: $scope
   }).then(function(popover) {
     $scope.popover = popover;
   });
-
   $scope.openPopover = function($event) {
     $scope.popover.show($event);
   };

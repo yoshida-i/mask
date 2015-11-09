@@ -9,6 +9,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
 
 .run(function($ionicPlatform, authService) {
   $ionicPlatform.ready(function() {
+    Parse.initialize("u3A4QJJS5GDZyfcsjJ2ZAqopjCRtmrzsGzlM3HrI", "y3ENtTTeFpry3XCHWi89ttmYxxOfMecl1LrQDdn1");
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if(window.cordova && window.cordova.plugins.Keyboard) {
@@ -19,7 +20,6 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    Parse.initialize("u3A4QJJS5GDZyfcsjJ2ZAqopjCRtmrzsGzlM3HrI", "y3ENtTTeFpry3XCHWi89ttmYxxOfMecl1LrQDdn1");
-    //authService.login();
+    authService.login();
   });
 })

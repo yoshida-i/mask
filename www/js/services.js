@@ -36,7 +36,7 @@ angular.module('app.services', [])
 
         user.signUp(null, {
             success: function(user) {
-                alert('debug: 初回ログイン、ユーザー作ったよ')
+                console.log('debug: 初回ログイン、ユーザー作ったよ')
             },
             error: function(user, error) {
                 // Show the error message somewhere and let the user try again.
@@ -48,7 +48,7 @@ angular.module('app.services', [])
     function loginToParse(userid, password) {
         Parse.User.logIn(userid, password, {
             success: function(user) {
-                alert('debug: 再ログイン、ログインしたよ')
+                console.log('debug: 再ログイン、ログインしたよ')
                 console.log('success');
             },
             error: function(user, error) {
@@ -113,6 +113,10 @@ angular.module('app.services', [])
         getCurrentLocation: function() {
             return $q.when(getCurrentLatLng())
             .then(getLocation);
+        },
+
+        getCurrentLatLng: function(){
+            return getCurrentLatLng()
         }
     }
 }]);
