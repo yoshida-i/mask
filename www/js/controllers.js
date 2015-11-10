@@ -27,7 +27,7 @@ angular.module('app.controllers', [])
 
 
 
-.controller('timeLineCtrl', function($scope,$ionicLoading,$timeout,$ionicPopover, locationService) {
+.controller('timeLineCtrl', function($scope,$ionicLoading,$timeout,$ionicPopover, locationService, parseService) {
 
   $scope.$on('$ionicView.enter', function() {
       $timeout(function() {
@@ -47,24 +47,6 @@ angular.module('app.controllers', [])
       $scope.location = getLocationString(results[0].address_components);
   });
 
-
-  // 書き込み時日付とUserのオブジェクトIDから表示IDを作る
-  // サービスに移す
-  function getMaskId(){
-    var currentUser = Parse.User.current();
-    var d = new Date();
-
-    var year = d.getFullYear();
-    var month = d.getMonth()+1;
-    var day = d.getDate();
-
-    var seed = currentUser.id + year.toString() + month.toString() + day.toString();
-    var shaObj = new jsSHA("SHA-256", "TEXT");
-    shaObj.update(seed);
-    var hash = shaObj.getHash("HEX");
-    return hash.slice(-7);
-  }
-
   // Googleから取得した現在地をいい感じに加工する
   // サービスに移す
   function getLocationString(address) {
@@ -82,20 +64,7 @@ angular.module('app.controllers', [])
   // 書き込みボタンをおした時に呼ばれる関数
   // 必要な情報を集めてParseにPutする
   $scope.sendMessage = function(sendMessageForm) {
-    $ionicLoading.show({
-      template: '送信中'
-    });
-    locationService.getCurrentLatLng()
-    .then(function(position){
-      var point = new Parse.GeoPoint({latitude: position.coords.latitude, longitude: position.coords.longitude});
-      var message = {
-        "id": getMaskId(),
-        "body": $scope.input.message,
-        "location": point
-      };
-      console.log(JSON.stringify(message));
-      $ionicLoading.hide();
-    });
+    parseService.savePost($scope.input.message);
   }
 
   $scope.datas = [

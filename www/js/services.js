@@ -91,13 +91,16 @@ angular.module('app.services', [])
     }
 }])
 
+
+
+
 .factory('locationService', ['$q',function($q){
     function getCurrentLatLng() {
         var deferred = $q.defer();
         var posOptions = {timeout: 10000, enableHighAccuracy: false};
         navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, posOptions);
         return deferred.promise;
-    }
+    };
 
     function getLocation(position){
         var deferred = $q.defer();
@@ -107,7 +110,7 @@ angular.module('app.services', [])
         var geocoder = new google.maps.Geocoder;
         geocoder.geocode({'location': latlng}, deferred.resolve);
         return deferred.promise;
-    }
+    };
 
     return {
         getCurrentLocation: function() {
@@ -117,6 +120,53 @@ angular.module('app.services', [])
 
         getCurrentLatLng: function(){
             return getCurrentLatLng()
+        }
+    }
+}])
+
+
+
+
+.factory('parseService',['locationService','$ionicLoading',function(locationService,$ionicLoading){
+
+    // 書き込み時日付とUserのオブジェクトIDから表示IDを作る
+    // サービスに移す
+    function getMaskId(){
+        var currentUser = Parse.User.current();
+        var d = new Date();
+
+        var year = d.getFullYear();
+        var month = d.getMonth()+1;
+        var day = d.getDate();
+
+        var seed = currentUser.id + year.toString() + month.toString() + day.toString();
+        var shaObj = new jsSHA("SHA-256", "TEXT");
+        shaObj.update(seed);
+        var hash = shaObj.getHash("HEX");
+        return hash.slice(-7);
+    };
+
+    return {
+        savePost: function(content){
+            $ionicLoading.show({
+                template: '送信中'
+            });
+            locationService.getCurrentLatLng()
+            .then(function(position){
+                var point = new Parse.GeoPoint({latitude: position.coords.latitude, longitude: position.coords.longitude});
+                var currentUser = Parse.User.current();
+                var Post = Parse.Object.extend("Post");
+                var post = new Post();
+                post.set("maskid", getMaskId());
+                post.set("content", content);
+                post.set("location", point);
+                post.set("user", currentUser);
+                post.save()
+                .then(function(savedpost){
+                    console.log(JSON.stringify(savedpost));
+                    $ionicLoading.hide();
+                });
+            });
         }
     }
 }]);
