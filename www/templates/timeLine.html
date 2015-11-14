@@ -35,7 +35,7 @@
   <form name="sendMessageForm" ng-submit="sendMessage(sendMessageForm)" novalidate>
     <ion-footer-bar class="bar-stable item-input-inset message-footer" keyboard-attach>
       <label class="item-input-wrapper">
-        <textarea ng-model="input.message" value="" placeholder="黒いこと言おう" required minlength="1" maxlength="1500" msd-elastic></textarea>
+        <textarea class="footer-textarea" ng-model="input.message" value="" placeholder="黒いこと言おう" required minlength="1" maxlength="1500" msd-elastic></textarea>
       </label>
       <div class="footer-btn-wrap">
         <button class="button button-icon icon ion-android-send footer-btn" type="submit"
@@ -52,6 +52,10 @@
       <a class="item item-icon-left" ui-sref="feedback" ng-click="closePopover()">
         <i class="icon ion-monitor"></i>
         フィードバックちょ
+      </a>
+      <a class="item item-icon-left" ng-click="debug()">
+        <i class="icon ion-android-bulb"></i>
+        デバッグ用
       </a>
     </div>
   </ion-content>
