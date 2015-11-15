@@ -21,7 +21,7 @@ angular.module('app.controllers', [])
   })
 
 
-  .controller('timeLineCtrl', function ($scope, $ionicLoading, $timeout, $ionicPopover, $interval, locationService, parseService) {
+  .controller('timeLineCtrl', function ($scope, $ionicLoading, $timeout, $ionicPopover, locationService, parseService) {
 
 
     $scope.$on('$ionicView.enter', function () {
@@ -44,13 +44,13 @@ angular.module('app.controllers', [])
 
     $scope.debug = function(){
       locationService.debug();
-    }
+    };
 
     // 書き込みボタンをおした時に呼ばれる関数
     // 必要な情報を集めてParseにPutする
     $scope.sendMessage = function (sendMessageForm) {
       parseService.savePost($scope.input.message);
-    }
+    };
 
     $scope.datas = [
       {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
