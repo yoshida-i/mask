@@ -21,7 +21,7 @@ angular.module('app.services', [])
       }
     }
 
-    function getPasword() {
+    function getPassword() {
       if (window.localStorage) {
         if (!window.localStorage.getItem('userpassword')) {
           window.localStorage.setItem('userpassword', guid());
@@ -38,6 +38,7 @@ angular.module('app.services', [])
       user.signUp(null, {
         success: function (user) {
           console.log('debug: 初回ログイン、ユーザー作ったよ');
+          alert(Parse.User.current());
         },
         error: function (user, error) {
           // Show the error message somewhere and let the user try again.
@@ -51,6 +52,7 @@ angular.module('app.services', [])
         success: function (user) {
           console.log('debug: 再ログイン、ログインしたよ');
           console.log('success');
+          alert(Parse.User.current());
         },
         error: function (user, error) {
           console.log("Error: " + error.code + " " + error.message);
@@ -77,13 +79,12 @@ angular.module('app.services', [])
 
     return {
       login: function () {
-        // window.localStorage.clear();
         var userid = getUserId();
-        var userpassword = getPasword();
+        var userpassword = getPassword();
         console.log("UserId: " + userid);
         isUserExist(userid).then(function (result) {
           if (result.length !== 0) {
-            loginToParse(getUserId(), getPasword());
+            loginToParse(getUserId(), getPassword());
           } else {
             signupToParse(userid, userpassword);
           }
@@ -96,8 +97,8 @@ angular.module('app.services', [])
   .factory('locationService', ['$q', '$rootScope', function ($q, $rootScope) {
 
     var locationName = '読込中';
-    var position;
-    var posOptions = {timeout: 5000, enableHighAccuracy: false, maximumAge: 60000};
+    var currentLatLng;
+    var posOptions = {timeout: 10000, enableHighAccuracy: false, maximumAge: 60000};
     var id;
 
     function getCurrentLatLng() {
@@ -112,11 +113,10 @@ angular.module('app.services', [])
     }
 
     function successWatchLocation(position){
-      this.position = position;
+      currentLatLng = position;
       getLocation(position)
       .then(function(results){
         locationName = getLocationString(results[0].address_components);
-        console.log(locationName);
         $rootScope.$broadcast('locationChange');
       });
     }
@@ -155,22 +155,16 @@ angular.module('app.services', [])
       },
 
       getCurrentLatLng: function () {
-        return getCurrentLatLng();
+        return currentLatLng;
       },
 
       getLocationName: function () {
         return locationName;
       },
 
-      debug: function () {
-        //$q.when(getCurrentLatLng())
-        //  .then(getLocation)
-        //  .then(function (results) {
-        //    locationName = getLocationString(results[0].address_components);
-        //  });
+      startWatchLocation: function () {
         startWatchLocation();
       }
-
     };
   }])
 
@@ -187,11 +181,37 @@ angular.module('app.services', [])
       var month = d.getMonth() + 1;
       var day = d.getDate();
 
-      var seed = currentUser.id + year.toString() + month.toString() + day.toString();
+      var seed = currentUser.id + ":" + year.toString() + month.toString() + day.toString() + "3e2ac609-f588-4a23-96fc-f6fc742516c7";
       var shaObj = new jsSHA("SHA-256", "TEXT");
       shaObj.update(seed);
       var hash = shaObj.getHash("HEX");
       return hash.slice(-7);
+    }
+
+    function savePost(content, position) {
+      var point = new Parse.GeoPoint({latitude: position.coords.latitude, longitude: position.coords.longitude});
+      var currentUser = Parse.User.current();
+      var Post = Parse.Object.extend("Post");
+      var post = new Post();
+      post.set("maskid", getMaskId());
+      post.set("content", content);
+      post.set("location", point);
+      post.set("user", currentUser);
+      return post.save()
+    }
+
+    function getPost(position) {
+      var PostObject = Parse.Object.extend("Post",{
+        getDate: function(){
+          return new Date(Date.parse(this.createdAt))
+        }
+      });
+      var query = new Parse.Query(PostObject);
+      if (position !== undefined) {
+        query.equalsTo("location","");
+      }
+      query.descending("createdAt");
+      return query.find()
     }
 
     return {
@@ -199,22 +219,22 @@ angular.module('app.services', [])
         $ionicLoading.show({
           template: '送信中'
         });
-        locationService.getCurrentLatLng()
-          .then(function (position) {
-            var point = new Parse.GeoPoint({latitude: position.coords.latitude, longitude: position.coords.longitude});
-            var currentUser = Parse.User.current();
-            var Post = Parse.Object.extend("Post");
-            var post = new Post();
-            post.set("maskid", getMaskId());
-            post.set("content", content);
-            post.set("location", point);
-            post.set("user", currentUser);
-            post.save()
-              .then(function (savedpost) {
+        var position = locationService.getCurrentLatLng();
+        if (typeof position === "undefined"){
+          $ionicLoading.hide();
+          alert('位置情報が取得できていません');
+          return
+        }
+        savePost(content,locationService.getCurrentLatLng())
+        .then(function (savedpost) {
                 console.log(JSON.stringify(savedpost));
                 $ionicLoading.hide();
               });
-          });
+      },
+
+      getPost: function(){
+        return getPost()
       }
+
     };
   }]);

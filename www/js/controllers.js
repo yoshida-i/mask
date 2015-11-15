@@ -22,7 +22,9 @@ angular.module('app.controllers', [])
 
 
   .controller('timeLineCtrl', function ($scope, $ionicLoading, $timeout, $ionicPopover, locationService, parseService) {
-
+    var footerBar;
+    var scroller;
+    var txtInput;
 
     $scope.$on('$ionicView.enter', function () {
       $timeout(function () {
@@ -32,17 +34,16 @@ angular.module('app.controllers', [])
       }, 0);
     }, 20000);
 
-    var footerBar;
-    var scroller;
     $scope.location = '読込中';
 
     // on location of the device change
     $scope.$on('locationChange', function () {
+      console.log('fire: locationChange');
       $scope.location = locationService.getLocationName();
     });
 
-    $scope.debug = function(){
-      locationService.debug();
+    $scope.debug = function () {
+      parseService.getPost();
     };
 
     // 書き込みボタンをおした時に呼ばれる関数
@@ -51,50 +52,29 @@ angular.module('app.controllers', [])
       parseService.savePost($scope.input.message);
     };
 
-    $scope.datas = [
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {
-        "id": "84kakvdi",
-        "body": "理科大内で大・ケイドロ大会開催中！！！参加希望者はコメント下さい！！",
-        "time": "10分",
-        "comments": [{"id": "84kakvdi", "body": "僕も参加したいです！次参加できるタイミングはいつですか？", "time": "6分"}, {
-          "id": "75hvbfio",
-          "body": "イスタンブール人も参加できる？",
-          "time": "2分"
-        }, {"id": "84kakvdi", "body": "参加したい方はルノアール前30分でよろしくっす！", "time": "1分"}]
-      },
-      {
-        "id": "ir93slksd",
-        "body": "むこの授業が暇すぎる。どうしたものか。出席者で暇な人、咳してくれい",
-        "time": "15分",
-        "comments": [{"id": "543kaaa", "body": "誰や、咳じゃなくてオナラしたやつ！！！", "time": "12分"}, {
-          "id": "jk4ml4a",
-          "body": "やめて、お茶ふいた",
-          "time": "10分"
-        }, {"id": "ir93slksd", "body": "ゆいちゃんペロペロ", "time": "1分"}]
-      },
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []},
-      {"id": "9osg4lias", "body": "あと３時間でアルバイトおおおお、めんどくさいいいいいああああ", time: "1分", "comments": []}
-    ];
+    $scope.datas = [];
 
     // 画面を引っ張った時の更新の関数
-    $scope.doRefresh = function () {
+
+    function getPost() {
       $ionicLoading.show({
-        template: 'Loading entries...'
+        template: '読込中'
       });
+      parseService.getPost()
+        .then(function(results){
+          console.log(JSON.stringify(results));
+          $scope.datas = results;
+        }, function(error){
+          console.error(error);
+          alert("投稿の取得に失敗しました");
+          alert(JSON.stringify(error));
+        });
       $scope.$broadcast('scroll.refreshComplete');
       $ionicLoading.hide();
+    };
+
+    $scope.doRefresh = function () {
+      getPost();
     };
 
     // ===========================

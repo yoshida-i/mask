@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'monospaced.elastic', 'ngIOS9UIWebViewPatch'])
+angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'monospaced.elastic', 'ngIOS9UIWebViewPatch','angularMoment'])
 
-.run(function($ionicPlatform, authService) {
+.run(function($ionicPlatform, authService, locationService, amMoment) {
   $ionicPlatform.ready(function() {
     Parse.initialize("u3A4QJJS5GDZyfcsjJ2ZAqopjCRtmrzsGzlM3HrI", "y3ENtTTeFpry3XCHWi89ttmYxxOfMecl1LrQDdn1");
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -20,6 +20,8 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    amMoment.changeLocale('ja');
     authService.login();
+    locationService.startWatchLocation();
   });
 })

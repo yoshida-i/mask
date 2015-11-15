@@ -14,13 +14,13 @@
       <div class="item item-body">
         <div class="row card-head">
           <div class="col col-50">
-            id:{{data.id}}
+            id:{{data.get("maskid")}}
           </div>
           <div class="col col-25 col-offset-25">
-            {{data.time}}前
+            <span am-time-ago="{{data.getDate()}}"></span>
           </div>
         </div>
-        {{data.body}}
+        {{data.get("content")}}
       </div>
       <div class="item tabs tabs-icon-left">
         <a class="tab-item" href="#">
