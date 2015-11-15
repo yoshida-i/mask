@@ -38,7 +38,6 @@ angular.module('app.controllers', [])
 
     // on location of the device change
     $scope.$on('locationChange', function () {
-      console.log(location);
       $scope.location = locationService.getLocationName();
     });
 

@@ -117,7 +117,7 @@ angular.module('app.services', [])
       .then(function(results){
         locationName = getLocationString(results[0].address_components);
         console.log(locationName);
-        $rootScope.$broadcast('locationChange', position);
+        $rootScope.$broadcast('locationChange');
       });
     }
 
