@@ -37,7 +37,7 @@ angular.module('app.services', [])
 
       user.signUp(null, {
         success: function (user) {
-          console.log('debug: 初回ログイン、ユーザー作ったよ')
+          console.log('debug: 初回ログイン、ユーザー作ったよ');
         },
         error: function (user, error) {
           // Show the error message somewhere and let the user try again.
@@ -49,7 +49,7 @@ angular.module('app.services', [])
     function loginToParse(userid, password) {
       Parse.User.logIn(userid, password, {
         success: function (user) {
-          console.log('debug: 再ログイン、ログインしたよ')
+          console.log('debug: 再ログイン、ログインしたよ');
           console.log('success');
         },
         error: function (user, error) {
@@ -89,11 +89,11 @@ angular.module('app.services', [])
           }
         });
       }
-    }
+    };
   }])
 
 
-  .factory('locationService', ['$q', function ($q) {
+  .factory('locationService', ['$q', '$rootScope', function ($q, $rootScope) {
 
     var locationName = '読込中';
     var position;
@@ -104,36 +104,36 @@ angular.module('app.services', [])
       var deferred = $q.defer();
       navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, posOptions);
       return deferred.promise;
-    };
+    }
 
     function startWatchLocation(){
-      id = navigator.geolocation.watchPosition( successWatchLocation , errorWatchLocation , posOptions)
+      id = navigator.geolocation.watchPosition( successWatchLocation , errorWatchLocation , posOptions);
       console.log(id);
-    };
+    }
 
     function successWatchLocation(position){
       this.position = position;
       getLocation(position)
-        .then(function(results){
-          locationName = getLocationString(results[0].address_components);
-          console.log(locationName);
-        }
-      );
-    };
+      .then(function(results){
+        locationName = getLocationString(results[0].address_components);
+        console.log(locationName);
+        $rootScope.$broadcast('locationChange', position);
+      });
+    }
 
     function errorWatchLocation(err){
       console.error(err);
-    };
+    }
 
     function getLocation(position) {
       var deferred = $q.defer();
       var latlng = new google.maps.LatLng(
         position.coords.latitude,
         position.coords.longitude);
-      var geocoder = new google.maps.Geocoder;
+      var geocoder = new google.maps.Geocoder();
       geocoder.geocode({'location': latlng}, deferred.resolve);
       return deferred.promise;
-    };
+    }
 
     // Googleから取得した現在地をいい感じに加工する
     function getLocationString(address) {
@@ -145,8 +145,8 @@ angular.module('app.services', [])
         if (item.types.indexOf('sublocality_level_1') >= 0) return true;
       })[0].short_name;
 
-      return locality + sublocality + " 付近"
-    };
+      return locality + sublocality + " 付近";
+    }
 
     return {
       getCurrentLocation: function () {
@@ -155,7 +155,7 @@ angular.module('app.services', [])
       },
 
       getCurrentLatLng: function () {
-        return getCurrentLatLng()
+        return getCurrentLatLng();
       },
 
       getLocationName: function () {
@@ -171,7 +171,7 @@ angular.module('app.services', [])
         startWatchLocation();
       }
 
-    }
+    };
   }])
 
 
@@ -192,7 +192,7 @@ angular.module('app.services', [])
       shaObj.update(seed);
       var hash = shaObj.getHash("HEX");
       return hash.slice(-7);
-    };
+    }
 
     return {
       savePost: function (content) {
@@ -216,6 +216,5 @@ angular.module('app.services', [])
               });
           });
       }
-    }
+    };
   }]);
-

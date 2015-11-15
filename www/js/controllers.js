@@ -36,9 +36,11 @@ angular.module('app.controllers', [])
     var scroller;
     $scope.location = '読込中';
 
-    $interval(function(){
+    // on location of the device change
+    $scope.$on('locationChange', function () {
+      console.log(location);
       $scope.location = locationService.getLocationName();
-    }, 1000);
+    });
 
     $scope.debug = function(){
       locationService.debug();
@@ -141,4 +143,4 @@ angular.module('app.controllers', [])
       // Execute action
     });
 
-  })
+  });
